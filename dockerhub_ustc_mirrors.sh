@@ -34,7 +34,7 @@ check_root(){
     fi
 }
 
-# 配置 
+# 配置 DockerHub 镜像
 config_dockerhub_mirrors(){
   if [[ ! -d ${docker_conf_dir} ]]; then
     mkdir -p ${docker_conf_dir}
