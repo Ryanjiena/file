@@ -2,13 +2,13 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
-#===================================================
+#============================================================
 #	System Required: CentOS/Debian/Ubuntu
 #	Description: Install Docker + Cloudreve for Linux
 #	Version: 0.1.2
 #	Author: ryanjiena
 #	Blog: https://www.ryanjie.cn
-#===================================================
+#============================================================
 # Fonts Color
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 
