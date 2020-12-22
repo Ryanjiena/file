@@ -25,6 +25,8 @@ cloudreve_date_default_path="/cloudreve"
 cloudreve_default_port="80"
 cloudreve_default_name="docker-cloudreve"
 curl="/usr/bin/curl"
+docker_conf_dir="/etc/docker"
+docker_conf="${docker_conf_dir}/daemon.json"
 
 # shellcheck disable=SC1091
 
@@ -122,6 +124,19 @@ install_docker_compose() {
   fi
 }
 
+# 配置 DockerHub 镜像
+config_dockerhub_mirrors(){
+  if [[ ! -d ${docker_conf_dir} ]]; then
+    mkdir -p ${docker_conf_dir}
+  fi
+  cat > ${docker_conf} <<-EOF
+{
+  "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn/"]
+}
+EOF
+  systemctl daemon-reload && systemctl restart docker
+}
+
 # 检查 cloudreve
 check_cloudreve(){
   systemctl is-active "docker" &>/dev/null || install_docker
@@ -138,7 +153,7 @@ install_cloudreve(){
     fi
   read -e -p "请输入 Cloudreve 绑定的 URL(例如：www.ryanjie.cn)， [ 默认为本地 IP ] :" cloudreve_url  
     if [[ -z "${cloudreve_url}" ]]; then
-      echo -e "${Info} 正在获取 公网ip 信息，请耐心等待 ${Font_color_suffix}"
+      echo -e "${Info} 正在获取 公网ip 信息，请耐心等待"
       cloudreve_url=$(curl -s https://api64.ipify.org)
     fi
   # read -e -p "请输入 Docker 容器的名称 [ 默认为 docker-cloudreve ] :" cloudreve_name
@@ -154,7 +169,7 @@ install_cloudreve(){
 uninstall_cloudreve(){
   docker stop cloudreve
   docker rm -f cloudreve
-    echo -e "${Info} 卸载 cloudreve 完成！ ${Font_color_suffix}"
+    echo -e "${Info} 卸载 cloudreve 完成！ "
   sleep 3
 }
 
@@ -178,7 +193,8 @@ menu(){
   ${Green_font_prefix} 1.${Font_color_suffix} 安装 Docker 环境
   ${Green_font_prefix} 2.${Font_color_suffix} 安装 Cloudreve 
   ${Green_font_prefix} 3.${Font_color_suffix} 卸载 Cloudreve 
-  ${Green_font_prefix} 4.${Font_color_suffix} 退出脚本 
+  ${Green_font_prefix} 4.${Font_color_suffix} 配置 DockerHub USTC 镜像
+  ${Green_font_prefix} 5.${Font_color_suffix} 退出脚本 
   ————————————" && echo
   echo
   read -e -p " 请输入数字 [0-4]:" num
@@ -195,7 +211,10 @@ menu(){
     3)
       uninstall_cloudreve
       ;;
-    4)
+	4)
+      config_dockerhub_mirrors
+      ;;
+    5)
       exit 0
       ;;
     *)
