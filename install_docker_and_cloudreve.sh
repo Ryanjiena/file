@@ -147,6 +147,7 @@ install_cloudreve(){
   #     echo -e "${Info} Docker 容器的名称为 [ ${cloudreve_name} ]"
   #   fi  
   docker run -t -p 80:80 -v ${cloudreve_date_path}:/cloudreve -e CLOUDREVE_URL="http:${cloudreve_url}/" --name cloudreve ilemonrain/cloudreve
+  echo -e "${Info} 安装完成，请访问 http:${cloudreve_url} 配置 Cloudreve！"
 }
 
 # 卸载 cloudreve
